@@ -1,0 +1,10 @@
+## 2018-06-16: flood of HTTP requests for non-existing stuff such as "/6180/squid_stuffed_in_oil", "/2025/dressed_chicken"
+#  Hostname turbolab.it provided via SNI, but no hostname provided in HTTP request
+109.248.237.61
+
+## 2018-06-16: multiple HTTP requests to "/wls-wsat", "verifylogin.do"
+39.65.64.194
+
+## 2018-06-16: multiple HTTP tries on "/dbadmin/", "/admin/", ...
+211.159.167.45
+
