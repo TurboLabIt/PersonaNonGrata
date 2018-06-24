@@ -69,37 +69,15 @@ printTitle "Updating..."
 git pull -C "$SCRIPT_DIR"
 
 
-printTitle "Creating folders"
-DISLOCKER_MOUNT_FULLPATH=/media/dislocker/dislocked/
-MYDRIVE_MOUNT_FULLPATH=/media/dislocker/MYDRIVE/
+printTitle "Cycling on IPs.."
+IP_BLACKLIST_FULLPATH=${SCRIPT_DIR}/ip_blacklist.d/personanongrata_ip_blocklist.txt
 
-mkdir -p "$DISLOCKER_MOUNT_FULLPATH"
-mkdir -p "$MYDRIVE_MOUNT_FULLPATH"
+while read -r line || [[ -n "$line" ]]; do
+    echo "Text read from file: $line"
+done < "$IP_BLACKLIST_FULLPATH"
 
-printTitle "Detecting Bitlocked disk"
-FDISK="$(fdisk -l | grep 'HPFS/NTFS/exFAT')"
-ZZDISK="$(echo $FDISK | grep -Po '/\Ksd[a-z][0-9]')"
-
-if [ -z "$ZZDISK" ]; then
-
-	printTitle "Disk detection FAILED"
-	echo "Unable to detect a Bitlocked Windows drive. Now exiting. Please open an issue on https://github.com/TurboLabIt/${SCRIPT_NAME}"
-
-	echo $(date)
-	echo "$FRAME"
-	exit
-else
-	printTitle "Bitlocked drive DETECTED"
-	echo "Will now mount $ZZDISK ($FDISK)"
-fi
-
-printTitle "Dislocking"
-dislocker -V /dev/${ZZDISK} -u"${BITLOCKER_PASSWORD}" -- "${DISLOCKER_MOUNT_FULLPATH}"
-
-printTitle "Attempting mount"
-mount -o loop "${DISLOCKER_MOUNT_FULLPATH}dislocker-file" "${MYDRIVE_MOUNT_FULLPATH}"
-
-printTitle "Finish"
-echo "Your unlocked drive is available as ${MYDRIVE_MOUNT_FULLPATH}"
+printTitle "It's done!"
+echo "Your system in now shielded from unwanted clients"
+echo "Please add yours non-gratas to https://github.com/TurboLabIt/${SCRIPT_NAME}"
 echo $(date)
 echo "$FRAME"
