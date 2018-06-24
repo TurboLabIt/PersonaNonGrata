@@ -74,6 +74,17 @@ IP_BLACKLIST_FULLPATH=${SCRIPT_DIR}/ip_blacklist.d/personanongrata_ip_blocklist.
 
 while read -r line || [[ -n "$line" ]]; do
     echo "Text read from file: $line"
+	
+	FIRSTCHAR="${line:0:1}"
+	
+	if [ "$FIRSTCHAR" == "#" ]; then
+		
+		echo ufw delete deny from $line to any
+		echo ufw insert 1 deny from $line to any
+	
+	fi
+	
+	
 done < "$IP_BLACKLIST_FULLPATH"
 
 printTitle "It's done!"
