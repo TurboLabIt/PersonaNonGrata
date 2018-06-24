@@ -66,26 +66,29 @@ do
 done
 
 printTitle "Updating..."
-git pull -C "$SCRIPT_DIR"
+git -C "$SCRIPT_DIR" pull
+
+printTitle "Insert a dummy rule (it's needed for scripting)"
+ufw deny from 95.141.35.37 to any
 
 
 printTitle "Cycling on IPs.."
 IP_BLACKLIST_FULLPATH=${SCRIPT_DIR}/ip_blacklist.d/personanongrata_ip_blocklist.txt
 
 while read -r line || [[ -n "$line" ]]; do
-    echo "Text read from file: $line"
 	
 	FIRSTCHAR="${line:0:1}"
 	
-	if [ "$FIRSTCHAR" == "#" ]; then
+	if [ "$FIRSTCHAR" != "#" ] &&  [ "$FIRSTCHAR" != "" ]; then
 		
-		echo ufw delete deny from $line to any
-		echo ufw insert 1 deny from $line to any
-	
+		ufw insert 1 deny from $line to any
 	fi
 	
 	
 done < "$IP_BLACKLIST_FULLPATH"
+
+printTitle "Remove the dummy rule"
+ufw delete deny from 95.141.35.37 to any
 
 printTitle "It's done!"
 echo "Your system in now shielded from unwanted clients"
